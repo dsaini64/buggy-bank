@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard - Buggy Bank</title>
+</head>
+<body>
+    <h2>Welcome, {{ username }}</h2>
+    <p>Balance: ${{ balance }}</p>
+    <a href="/transfer">Transfer Funds</a> | <a href="/logout">Logout</a>
+    <h3>Transactions</h3>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Sender</th>
+            <th>Recipient</th>
+            <th>Amount</th>
+            <th>Note</th>
+            <th>Timestamp</th>
+        </tr>
+        {% for txn in transactions %}
+        <tr>
+            <td>{{ txn[0] }}</td>
+            <td>{{ txn[1] }}</td>
+            <td>{{ txn[2] }}</td>
+            <td>${{ txn[3] }}</td>
+            <td>{{ txn[4]|safe }}</td> <!-- XSS vulnerable -->
+            <td>{{ txn[5] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul>
+          {% for message in messages %}
+            <li>{{ message|safe }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+</body>
+</html>
